@@ -1,0 +1,32 @@
+open System
+
+let rec readInput () =
+    printf "Введите число (или 'q' для завершения): "
+    let input = Console.ReadLine()
+    match input.ToLower() with
+    | "q" -> None
+    | _ ->
+        match Int32.TryParse input with
+        | true, number -> Some number
+        | false, _ ->
+            printfn "Ошибка ввода. Пожалуйста, введите целое число."
+            readInput ()
+
+let processNumbers () =
+    let rec collectNumbers acc =
+        match readInput () with
+        | Some number -> collectNumbers ((number + 1) :: acc)
+        | None -> List.rev acc
+
+    collectNumbers []
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите числа, а программа увеличит их на 1."
+
+    let result = processNumbers ()
+
+    printfn "Результат: %A" result
+    printfn "Нажмите любую клавишу для выхода..."
+    Console.ReadKey() |> ignore
+    0
