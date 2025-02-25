@@ -1,0 +1,28 @@
+open System
+
+let productOfOddDigits (number: int) =
+    let rec loop n acc =
+        if n = 0 then
+            acc
+        else
+            let digit = n % 10
+            if digit % 2 <> 0 then
+                loop (n / 10) (acc * digit)
+            else
+                loop (n / 10) acc
+    loop number 1
+
+let rec getInput () =
+    printf "Введите натуральное число: "
+    match Int32.TryParse(Console.ReadLine()) with
+    | true, n when n > 0 -> n
+    | _ -> 
+        printfn "Ошибка ввода. Пожалуйста, введите натуральное число больше 0."
+        getInput()
+
+[<EntryPoint>]
+let main argv =
+    let number = getInput()
+    let product = productOfOddDigits number
+    printfn "Произведение нечётных цифр числа %d равно %d" number product
+    0
