@@ -1,0 +1,86 @@
+open System
+
+let addElement lst element =
+    element :: lst
+
+let removeElement lst element =
+    List.filter (fun x -> x <> element) lst
+
+let findElement lst element =
+    List.tryFind (fun x -> x = element) lst
+
+let concatLists lst1 lst2 =
+    List.append lst1 lst2
+
+let getElementByIndex lst index =
+    if index >= 0 && index < List.length lst then
+        Some(List.item index lst)
+    else
+        None
+
+let printList lst =
+    printfn "Список: %A" lst
+
+let inputList () =
+    printfn "Введите элементы списка через пробел:"
+    let input = Console.ReadLine()
+    input.Split(' ') |> Array.toList
+
+let rec mainLoop lst =
+    printfn "\nВыберите операцию:"
+    printfn "1. Добавить элемент"
+    printfn "2. Удалить элемент"
+    printfn "3. Найти элемент"
+    printfn "4. Сцепить два списка"
+    printfn "5. Получить элемент по индексу"
+    printfn "6. Вывести список"
+    printfn "7. Выйти"
+    printf "Ваш выбор: "
+    match Console.ReadLine() with
+    | "1" ->
+        printf "Введите элемент для добавления: "
+        let element = Console.ReadLine()
+        let newList = addElement lst element
+        printfn "Элемент добавлен."
+        mainLoop newList
+    | "2" ->
+        printf "Введите элемент для удаления: "
+        let element = Console.ReadLine()
+        let newList = removeElement lst element
+        printfn "Элемент удален."
+        mainLoop newList
+    | "3" ->
+        printf "Введите элемент для поиска: "
+        let element = Console.ReadLine()
+        match findElement lst element with
+        | Some(x) -> printfn "Элемент найден: %s" x
+        | None -> printfn "Элемент не найден."
+        mainLoop lst
+    | "4" ->
+        let newList = inputList()
+        let concatenatedList = concatLists lst newList
+        printfn "Списки сцеплены."
+        mainLoop concatenatedList
+    | "5" ->
+        printf "Введите индекс: "
+        match Int32.TryParse(Console.ReadLine()) with
+        | true, index ->
+            match getElementByIndex lst index with
+            | Some(x) -> printfn "Элемент с индексом %d: %s" index x
+            | None -> printfn "Индекс вне диапазона."
+        | _ -> printfn "Некорректный ввод индекса."
+        mainLoop lst
+    | "6" ->
+        printList lst
+        mainLoop lst
+    | "7" ->
+        printfn "Выход из программы."
+    | _ ->
+        printfn "Некорректный выбор. Попробуйте снова."
+        mainLoop lst
+
+[<EntryPoint>]
+let main argv =
+    let initialList = inputList()
+    mainLoop initialList
+    0
