@@ -1,0 +1,32 @@
+open System
+
+let PosledChislo number =
+    let str = number.ToString()
+    let PosledSimvol = str.[str.Length - 1]
+    if Char.IsDigit PosledSimvol then
+        int PosledSimvol - int '0'
+    else
+        0
+
+let rec VvodChisla numbers =
+    printf "Введите число (или 'стоп' для завершения): "
+    let input = Console.ReadLine()
+    if input = "стоп" then
+        numbers 
+    else
+        match Double.TryParse input with
+        | true, number ->
+            VvodChisla (number :: numbers) 
+        | false, _ ->
+            printfn "Это не число, попробуйте еще раз."
+            VvodChisla numbers 
+
+printfn "Вводите числа по одному. Когда закончите, напишите 'стоп'."
+
+let numbers = VvodChisla [] |> List.rev 
+
+let PosledChisla = List.map PosledChislo numbers
+
+printfn "Последние цифры чисел:"
+for digit in PosledChisla do
+    printfn "%d" digit
