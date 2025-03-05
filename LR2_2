@@ -1,0 +1,25 @@
+open System
+
+let PolSpisokSim () =
+    printfn "Вводите символы по одному. Чтобы закончить, введите 'стоп':"
+    let rec Simvol (list: char list) =
+        let input = Console.ReadLine()
+        if input = "стоп" then
+            List.rev list
+        else
+            if input.Length = 1 then
+                let char = input.[0]
+                Simvol (char :: list)
+            else
+                printfn "Ошибка, введите символ."
+                Simvol list
+    Simvol []
+
+let SimvolVStroku (list: char list) =
+    list
+    |> List.map string
+    |> String.concat ""
+
+let SpisokSim = PolSpisokSim() 
+let resultat = SimvolVStroku SpisokSim
+printfn "Результат: %s" resultat
