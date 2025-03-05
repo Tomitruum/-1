@@ -30,6 +30,3 @@ let PosledChisla = List.map PosledChislo numbers
 printfn "Последние цифры чисел:"
 for digit in PosledChisla do
     printfn "%d" digit
-
-printfn "Нажмите любую клавишу, чтобы выйти."
-Console.ReadKey() |> ignore
