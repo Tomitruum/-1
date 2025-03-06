@@ -17,8 +17,7 @@ let PolSpisokSim () =
 
 let SimvolVStroku (list: char list) =
     list
-    |> List.map string
-    |> String.concat ""
+    |> List.fold (fun n char -> n + string char) ""
 
 let SpisokSim = PolSpisokSim() 
 let resultat = SimvolVStroku SpisokSim
