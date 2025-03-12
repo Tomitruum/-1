@@ -1,0 +1,23 @@
+open System
+open System.IO
+
+let ProverkaNalichiyaFailov (katalog: string) =
+    if Directory.Exists(katalog) then
+        let files = Directory.EnumerateFiles(katalog)
+        if Seq.isEmpty files then
+            printfn "В каталоге '%s' нет файлов." katalog
+        else
+            printfn "В каталоге '%s' найдены файлы:" katalog
+            files |> Seq.iter (printfn "%s")
+    else
+        printfn "Каталога '%s' не существует." katalog
+
+let main () =
+    printfn "Введите путь к каталогу:"
+    let PutKataloga = Console.ReadLine()
+    if String.IsNullOrWhiteSpace(PutKataloga) then
+        printfn "Путь к каталогу не был введен."
+    else
+        ProverkaNalichiyaFailov PutKataloga
+
+main ()
