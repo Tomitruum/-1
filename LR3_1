@@ -1,0 +1,26 @@
+open System
+
+let PosledChislo number =
+    let str = number.ToString()
+    let PosledSimvol = str.[str.Length - 1]
+    if Char.IsDigit PosledSimvol then
+        int PosledSimvol - int '0' 
+    else
+        0 
+
+let VvodChisel () =
+    printfn "Введите числа, разделенные пробелами:"
+    let input = Console.ReadLine()
+    input.Split(' ')
+    |> Seq.choose (fun s ->
+        match Double.TryParse(s) with
+        | true, num -> Some num
+        | false, _ -> 
+            printfn "Элемент '%s' не является числом" s
+            None
+    )
+
+let numbers = VvodChisel()
+let PosledChisla = numbers |> Seq.map PosledChislo
+printfn "Последние цифры введенных чисел:"
+PosledChisla |> Seq.iter (printfn "%d")
