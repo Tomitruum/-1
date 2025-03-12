@@ -1,0 +1,19 @@
+open System
+
+let VvodSimvolov () =
+    printfn "Введите символы через пробел:"
+    let input = Console.ReadLine()
+    input.Split(' ')
+    |> Seq.map (fun s ->
+        if s.Length > 1 then
+            printfn "Ошибка, элемент '%s' содержит больше одного символа. Будет использован только первый символ." s
+        if s.Length > 0 then s.[0] else ' ')
+    |> Seq.filter (fun c -> c <> ' ')
+
+let SimvolVStroku (chars: seq<char>) =
+    chars
+    |> Seq.fold (fun n c -> n + string c) ""
+
+let simvoly = VvodSimvolov()
+let resultat = SimvolVStroku simvoly
+printfn "Результат: %s" resultat
