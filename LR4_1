@@ -1,0 +1,52 @@
+open System
+
+type Tree<'T> =
+    | Empty
+    | Node of 'T * Tree<'T> * Tree<'T>
+
+let rec VvodDereva () =
+    printf "Введите значение узла (или пустую строку для пустого узла): "
+    let input = Console.ReadLine()
+    match input with
+    | "" -> Empty
+    | _ -> 
+        match Int32.TryParse(input) with
+        | true, value -> 
+            printfn "Введите левое поддерево узла %d:" value
+            let left = VvodDereva()
+            printfn "Введите правое поддерево узла %d:" value
+            let right = VvodDereva()
+            Node(value, left, right)
+        | _ -> 
+            printfn "Ошибка ввода! Введите целое число."
+            VvodDereva()
+
+let rec VivodDereva tree level =
+    match tree with
+    | Empty -> ()
+    | Node(value, left, right) ->
+        VivodDereva right (level + 1)
+        printfn "%s%A" (String.replicate (level * 4) " ") value
+        VivodDereva left (level + 1)
+
+let rec PreobrDereva (f: 'a -> 'b) (tree: Tree<'a>) : Tree<'b> =
+    match tree with
+    | Empty -> Empty
+    | Node(value, left, right) ->
+        let newValue = Seq.singleton value |> Seq.map f |> Seq.head
+        Node(newValue, PreobrDereva f left, PreobrDereva f right)
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите дерево:"
+    let tree = VvodDereva()
+    printf "Введите делитель (вещественное число): "
+    match Double.TryParse(Console.ReadLine()) with
+    | true, divisor when divisor <> 0.0 ->
+        let NovoeDerevo = PreobrDereva (fun x -> float x / divisor) tree
+        printfn "Исходное дерево:"
+        VivodDereva tree 0
+        printfn "Новое дерево:" 
+        VivodDereva NovoeDerevo 0
+    | _ -> printfn "Ошибка: нужно ввести ненулевое вещественное число!"
+    0
