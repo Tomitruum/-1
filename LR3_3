@@ -3,12 +3,9 @@ open System.IO
 
 let ProverkaNalichiyaFailov (katalog: string) =
     if Directory.Exists(katalog) then
-        let files = Directory.EnumerateFiles(katalog)
-        if Seq.isEmpty files then
-            printfn "В каталоге '%s' нет файлов." katalog
-        else
-            printfn "В каталоге '%s' найдены файлы:" katalog
-            files |> Seq.iter (printfn "%s")
+        let files = lazy (Directory.EnumerateFiles(katalog))
+        printfn "В каталоге '%s' найдены файлы:" katalog
+        files.Force() |> Seq.iter (printfn "%s")
     else
         printfn "Каталога '%s' не существует." katalog
 
