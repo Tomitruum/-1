@@ -1,0 +1,45 @@
+open System
+
+type Tree<'T> =
+    | Empty
+    | Node of 'T * Tree<'T> * Tree<'T>
+
+let rec VvodDereva () =
+    printf "Введите строку узла (или пустую строку для пустого узла): "
+    let input = Console.ReadLine()
+    match input with
+    | "" -> Empty
+    | _ -> 
+        printfn "Введите левое поддерево узла %s:" input
+        let left = VvodDereva()
+        printfn "Введите правое поддерево узла %s:" input
+        let right = VvodDereva()
+        Node(input, left, right)
+
+let rec VivodDereva tree level =
+    match tree with
+    | Empty -> ()
+    | Node(value, left, right) ->
+        VivodDereva right (level + 1)
+        printfn "%s%s" (String.replicate (level * 4) " ") value
+        VivodDereva left (level + 1)
+
+let rec DerevoVPosled tree =
+    seq {
+        match tree with
+        | Empty -> ()
+        | Node(value, left, right) ->
+            yield! DerevoVPosled left
+            yield value
+            yield! DerevoVPosled right
+    }
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите дерево строк:"
+    let tree = VvodDereva()
+    printfn "Исходное дерево:"
+    VivodDereva tree 0
+    let SummDlina = DerevoVPosled tree |> Seq.fold (fun n str -> n + str.Length) 0
+    printfn "Суммарная длина строк в дереве: %d" SummDlina
+    0
