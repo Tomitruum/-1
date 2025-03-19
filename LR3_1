@@ -1,26 +1,31 @@
 open System
 
-let PosledChislo number =
+let posledChislo number =
     let str = number.ToString()
-    let PosledSimvol = str.[str.Length - 1]
-    if Char.IsDigit PosledSimvol then
-        int PosledSimvol - int '0' 
+    let posledSimvol = str.[str.Length - 1]
+    if Char.IsDigit posledSimvol then
+        int posledSimvol - int '0' 
     else
         0 
 
-let VvodChisel () =
-    printfn "Введите числа, разделенные пробелами:"
-    let input = Console.ReadLine()
-    input.Split(' ')
-    |> Seq.choose (fun s ->
-        match Double.TryParse(s) with
-        | true, num -> Some num
-        | false, _ -> 
-            printfn "Элемент '%s' не является числом" s
-            None
-    )
+let rec vvodChisel n =
+    seq {
+        printf "Введите число (или 'стоп' для завершения): "
+        let input = Console.ReadLine()
+        if input <> "стоп" then
+            match Double.TryParse input with
+            | true, number ->
+                yield! vvodChisel (Seq.append n (seq { number }))
+            | false, _ ->
+                printfn "Это не число, попробуйте еще раз."
+                yield! vvodChisel n
+        else
+            yield! n
+    }
 
-let numbers = VvodChisel()
-let PosledChisla = numbers |> Seq.map PosledChislo
-printfn "Последние цифры введенных чисел:"
-PosledChisla |> Seq.iter (printfn "%d")
+let poslednieChisla = lazy (
+    vvodChisel Seq.empty
+    |> Seq.map posledChislo
+)
+
+poslednieChisla.Force() |> Seq.iter (printfn "%d")
