@@ -1,20 +1,18 @@
-open System
+:- initialization(main).
 
-let ZnakSummi numbers =
-    let sum = List.sum numbers
-    if sum > 0 then 1
-    elif sum < 0 then -1
-    else 0
+main :-
+    write('Введите список чисел в формате [X, Y, Z]: '), nl,
+    read(List),
+    summa_spiska(List, Sum),
+    opred_znaka(Sum, Result),
+    write('Результат: '), write(Result), nl,
+    get_char(_).
 
-let rec VvodSpiska () =
-    let input = Console.ReadLine()
-    if input = "стоп" then []
-    else int input :: VvodSpiska()
+summa_spiska([], 0).
+summa_spiska([H|T], Sum) :-
+    summa_spiska(T, RestSum),
+    Sum is H + RestSum.
 
-[<EntryPoint>]
-let main argv =
-    printfn "Введите числа по одному. Для завершения введите 'стоп'."
-    let numbers = VvodSpiska()
-    let resultat = ZnakSummi numbers
-    printfn "Результат: %d" resultat
-    0
+opred_znaka(Sum, -1) :- Sum < 0.
+opred_znaka(Sum, 1) :- Sum > 0.
+opred_znaka(0, 0).
