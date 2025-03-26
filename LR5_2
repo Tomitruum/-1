@@ -1,0 +1,20 @@
+open System
+
+let ZnakSummi numbers =
+    let sum = List.sum numbers
+    if sum > 0 then 1
+    elif sum < 0 then -1
+    else 0
+
+let rec VvodSpiska () =
+    let input = Console.ReadLine()
+    if input = "стоп" then []
+    else int input :: VvodSpiska()
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите числа по одному. Для завершения введите 'стоп'."
+    let numbers = VvodSpiska()
+    let resultat = ZnakSummi numbers
+    printfn "Результат: %d" resultat
+    0
