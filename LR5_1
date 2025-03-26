@@ -1,17 +1,22 @@
-open System
+summa_deliteley(N, Sum) :-
+    vichislit_summu(N, N, 0, Sum).
 
-let rec SummaDeliteley n delitel =
-    if delitel = 0 then 0
-    else 
-        let SummaOstalDelit = SummaDeliteley n (delitel - 1)
-        if n % delitel = 0 then delitel + SummaOstalDelit
-        else SummaOstalDelit
+vichislit_summu(_, 0, Acc, Acc) :- !.
+vichislit_summu(N, Delitel, Acc, Summa) :-
+    (N mod Delitel =:= 0 ->
+        NewAcc is Acc + Delitel
+    ;
+        NewAcc = Acc
+    ),
+    SledDelitel is Delitel - 1,
+    vichislit_summu(N, SledDelitel, NewAcc, Summa).
 
-[<EntryPoint>]
-let main argv =
-    printf "Введите натуральное число: "
-    let input = Console.ReadLine()
-    let number = Int32.Parse(input)
-    let resultat = SummaDeliteley number number
-    printfn "Сумма всех делителей числа %d равна %d" number resultat
-    0
+start :-
+    write('Введите натуральное число: '),
+    read(N),
+    (N > 0 ->
+        summa_deliteley(N, Summa),
+        write('Сумма делителей числа '), write(N), write(' равна '), write(Summa), nl
+    ;
+        write('Ошибка: число должно быть натуральным.'), nl
+    ).
