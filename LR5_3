@@ -1,0 +1,38 @@
+open System
+
+let rec Slit left right =
+    match left, right with
+    | [], ys -> ys
+    | xs, [] -> xs
+    | x :: xs', y :: ys' ->
+        if x < y then x :: Slit xs' right
+        else y :: Slit left ys'
+
+let rec SortSliyanie lst =
+    let rec Razdelit lst =
+        match lst with
+        | [] -> ([], [])
+        | [x] -> ([x], [])
+        | x :: y :: tail ->
+            let (l1, l2) = Razdelit tail
+            (x :: l1, y :: l2)
+    
+    match lst with
+    | [] -> []
+    | [x] -> [x]
+    | _ -> 
+        let (left, right) = Razdelit lst
+        Slit (SortSliyanie left) (SortSliyanie right)
+
+let rec VvodChisel n =
+    match Console.ReadLine() with
+    | "стоп" -> List.rev n
+    | str -> VvodChisel ((int str) :: n)
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите числа, по одному в строке. Для завершения введите 'стоп'."
+    let numbers = VvodChisel []
+    let SortChisla = SortSliyanie numbers
+    printfn "Отсортированный список: %A" SortChisla
+    0
