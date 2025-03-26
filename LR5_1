@@ -1,0 +1,17 @@
+open System
+
+let rec SummaDeliteley n delitel =
+    if delitel = 0 then 0
+    else 
+        let SummaOstalDelit = SummaDeliteley n (delitel - 1)
+        if n % delitel = 0 then delitel + SummaOstalDelit
+        else SummaOstalDelit
+
+[<EntryPoint>]
+let main argv =
+    printf "Введите натуральное число: "
+    let input = Console.ReadLine()
+    let number = Int32.Parse(input)
+    let resultat = SummaDeliteley number number
+    printfn "Сумма всех делителей числа %d равна %d" number resultat
+    0
