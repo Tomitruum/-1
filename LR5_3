@@ -1,38 +1,28 @@
-open System
+:- initialization(main).
 
-let rec Slit left right =
-    match left, right with
-    | [], ys -> ys
-    | xs, [] -> xs
-    | x :: xs', y :: ys' ->
-        if x < y then x :: Slit xs' right
-        else y :: Slit left ys'
+razd_spiska([], [], []).
+razd_spiska([X], [X], []).
+razd_spiska([X, Y | T], [X | L1], [Y | L2]) :-
+    razd_spiska(T, L1, L2).
 
-let rec SortSliyanie lst =
-    let rec Razdelit lst =
-        match lst with
-        | [] -> ([], [])
-        | [x] -> ([x], [])
-        | x :: y :: tail ->
-            let (l1, l2) = Razdelit tail
-            (x :: l1, y :: l2)
-    
-    match lst with
-    | [] -> []
-    | [x] -> [x]
-    | _ -> 
-        let (left, right) = Razdelit lst
-        Slit (SortSliyanie left) (SortSliyanie right)
+sliyanie([], L, L).
+sliyanie(L, [], L).
+sliyanie([X | T1], [Y | T2], [X | M]) :-
+    X =< Y, sliyanie(T1, [Y | T2], M).
+sliyanie([X | T1], [Y | T2], [Y | M]) :-
+    X > Y, sliyanie([X | T1], T2, M).
 
-let rec VvodChisel n =
-    match Console.ReadLine() with
-    | "стоп" -> List.rev n
-    | str -> VvodChisel ((int str) :: n)
+sort_sliyan([], []).
+sort_sliyan([X], [X]).
+sort_sliyan(List, Sorted) :-
+    razd_spiska(List, L1, L2),
+    sort_sliyan(L1, Sorted1),
+    sort_sliyan(L2, Sorted2),
+    sliyanie(Sorted1, Sorted2, Sorted).
 
-[<EntryPoint>]
-let main argv =
-    printfn "Введите числа, по одному в строке. Для завершения введите 'стоп'."
-    let numbers = VvodChisel []
-    let SortChisla = SortSliyanie numbers
-    printfn "Отсортированный список: %A" SortChisla
-    0
+main :-
+    write('Введите список (пример: [X,Y,Z]): '),
+    read(List),
+    sort_sliyan(List, Sorted),
+    write('Отсортированный список: '),
+    write(Sorted), nl.
