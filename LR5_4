@@ -1,0 +1,44 @@
+:- initialization(main).
+
+main :-
+    Players = [
+        kuznetsov-Prof1,
+        tokarev-Prof2,
+        slesarev-Prof3,
+        rezchikov-Prof4
+    ],
+
+    permutation([kuznets, tokar, slesar, rezchik], [Prof1, Prof2, Prof3, Prof4]),
+    Prof1 \= kuznets,
+    Prof2 \= tokar,
+    Prof3 \= slesar,
+    Prof4 \= rezchik,
+
+    permutation([A,B,C,D], Players),
+
+    ( (A = kuznetsov-_, C = _-slesar)
+    ; (B = kuznetsov-_, D = _-slesar) ),
+
+    ( (A = rezchikov-_, C = _-rezchik)
+    ; (B = rezchikov-_, D = _-rezchik) ),
+
+    ( (A = slesarev-_, B = _-tokar)
+    ; (B = slesarev-_, C = _-tokar)
+    ; (C = slesarev-_, D = _-tokar)
+    ; (D = slesarev-_, A = _-tokar) ),
+
+    member(Kuznets, [A,B,C,D]),
+    Kuznets = _-kuznets,
+
+    ( (A = Kuznets, Left = D)
+    ; (B = Kuznets, Left = A)
+    ; (C = Kuznets, Left = B)
+    ; (D = Kuznets, Left = C) ),
+
+    format('Результат: ~n'),
+    format('Слева от кузнеца (~w) сидит ~w~n~n', [Kuznets, Left]),
+    format('Полная рассадка: ~n'),
+    format('A: ~w~n', [A]),
+    format('B: ~w~n', [B]),
+    format('C: ~w~n', [C]),
+    format('D: ~w~n', [D]).
